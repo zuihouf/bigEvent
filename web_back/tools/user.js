@@ -14,6 +14,12 @@ var user = {
     },
 
     // 退出请求
-    
+    logout: function (options) {
+        $.ajax({
+            type: 'post',
+            url: USER_LOGOUT,
+            success: options.callback
+        });
+    }
 
 };
