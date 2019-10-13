@@ -20,6 +20,15 @@ var user = {
             url: USER_LOGOUT,
             success: options.callback
         });
+    },
+
+
+    // 简单信息展示
+    get_user: function (options) {
+        $.ajax({
+            url: GET_USER,
+            success: options.callback
+        });
     }
 
 };

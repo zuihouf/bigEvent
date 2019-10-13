@@ -153,6 +153,27 @@
         });
 
 
+
+
+        // 进行简单的信息展示功能
+        var nickname = $('.user_info span').val();
+
+        user.get_user({
+            callback: function (res) {
+                // console.log(res);
+                if (res.code === 200) {
+                    // 获取到请求的数据
+                    var data = res.data;
+                    // 左侧页面的信息展示
+                    $('.user_info img').prop('src', data.user_pic).next().text(data.nickname);
+                    // 右侧图片的信息展示
+                    $('.user_center_link img').prop('src', data.user_pic);
+                }
+            }
+        });
+      
+
+
     </script>
 
 </body>
