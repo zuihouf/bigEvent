@@ -68,16 +68,34 @@
             </form>
         </div>
     </div>
-
+    <!-- 检测用户表单是否输入完整 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示信息：</h4>
+                </div>
+                <div class="modal-body">
+                    请完整填写表单！
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+                    <!-- <button type="button" class="btn btn-primary" id="Confirm">确定</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="./tools/tool.js"></script>
     <script src="./tools/user.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
         // 请求用户的详细信息
-        $.ajax({
-            url: GET_USERINFO,
-            success: function (res) {
+        user.get_userinfo({
+            callback: function (res) {
                 // console.log(res);
                 // 检测响应状态
                 if (res.code === 200) {
@@ -96,8 +114,56 @@
         });
 
 
+        // 修改用户的表单
+
+        // 进行点击查看表单是否填写完毕
+
+        $('#submit').on('click', function () {
+            // 获取表单数据
+            var fd = new FormData($('form')[0]);
+            // console.log(fd.get('password'));
+            // 进行检测是否填写完毕
+            if (
+                fd.get('username').trim() === '' ||
+                fd.get('nickname').trim() === '' ||
+                fd.get('password').trim() === '' ||
+                fd.get('email').trim() === '' ||
+                // 文件域如果没有选择文件，size为0和name为 ''
+                fd.get('user_pic').size === 0
+            ) {
+                $('#myModal').modal('show');
+                return;
+            }
 
 
+            // 进行发送请求
+            $.ajax({
+                type: 'post',
+                url: EDIT_USERINFO,
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.code === 200) {
+                        // 如果修改成功，页面跳转到登录页面
+                        parent.location.href = 'login.html';
+                    }
+                }
+            });
+        });
+
+        // 本地图片预览
+        $('#user_pic').on('change', function () {
+            // 获取文件域中的文件信息
+            var tempFile = this.files[0];
+            // console.log(tempFile);
+            // 生成临时的图片地址
+            var tempSrc = URL.createObjectURL(tempFile);
+            // 将获取的临时地址传入acatar中
+            $('#acatar').prop('src',tempSrc);
+
+
+        });
 
     </script>
 </body>

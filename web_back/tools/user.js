@@ -29,6 +29,14 @@ var user = {
             url: GET_USER,
             success: options.callback
         });
-    }
+    },
 
+
+    // 请求用户信息的获取
+    get_userinfo: function (options) {
+        $.ajax({
+            url: GET_USERINFO,
+            success: options.callback
+        });
+    },
 };
