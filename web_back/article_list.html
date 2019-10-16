@@ -24,10 +24,10 @@
                     <form class="form-inline">
                         <select id="selCategory" name="" class="form-control input-sm">
                             <option>所有分类</option>
-                            <option>未分类</option>
+                            <!-- <option>未分类</option>
                             <option>奇趣事</option>
                             <option>会生活</option>
-                            <option>爱旅行</option>
+                            <option>爱旅行</option> -->
                         </select>
                         <select id="selStatus" name="" class="form-control input-sm">
                             <option>所有状态</option>
@@ -53,11 +53,11 @@
                         <th class="text-center" width="100">操作</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
 
 
 
-                    <tr>
+                    <!-- <tr>
                         
                         <td>王积千造统最头</td>
                         <td>杰克</td>
@@ -243,38 +243,97 @@
                             <a href="post-edit.html?id=995" class="btn btn-default btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 995 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
-                    </tr>
+                    </tr> -->
 
 
                 </tbody>
             </table>
 
             <div class="row text-center">
-            <ul class="pagination pagination-sm">
-                <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
-                <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
-                <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                <li class="page-item"><a href="#" class="page-link">3</a></li>
-                <li class="page-item"><a href="#" class="page-link">4</a></li>
-                <li class="page-item"><a href="#" class="page-link">5</a></li>
-                <li class="page-item"><a href="#" class="page-link">6</a></li>
-                <li class="page-item"><a href="#" class="page-link">7</a></li>
-                <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
-                <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-            </ul>
-        </div>
+                <ul class="pagination pagination-sm">
+                    <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
+                    <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
+                    <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                    <li class="page-item"><a href="#" class="page-link">2</a></li>
+                    <li class="page-item"><a href="#" class="page-link">3</a></li>
+                    <li class="page-item"><a href="#" class="page-link">4</a></li>
+                    <li class="page-item"><a href="#" class="page-link">5</a></li>
+                    <li class="page-item"><a href="#" class="page-link">6</a></li>
+                    <li class="page-item"><a href="#" class="page-link">7</a></li>
+                    <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
+                    <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
+                </ul>
+            </div>
 
         </div>
     </div>
 
     <script>
         // 设置左侧菜单
-        $('#release_btn').click(function(){
-            window.parent.setMenu(1,1);
+        $('#release_btn').click(function () {
+            window.parent.setMenu(1, 1);
         })
     </script>
 
+
+    <!-- 引入文件 -->
+    <script src="./tools/tool.js"></script>
+    <script src="./tools/article.js"></script>
+
+    <!-- 引入模板引擎文件 -->
+    <script src="./js/template-web.js"></script>
+
+    <!-- 设置文章信息模板 -->
+    <script type="text/html" id="article">
+        <!-- 进行遍历 -->
+        {{each data v}}
+    <tr>
+        <!-- 将每个数据进行填入 -->
+        <td>{{v.title}}</td>
+        <td>{{v.author}}</td>
+        <td>{{v.type}}</td>
+        <td class="text-center">{{v.date}}</td>
+        <td class="text-center">{{v.state}}</td>
+        <td class="text-center">
+            <a href="post-edit.html?id=996" class="btn btn-default btn-xs">编辑</a>
+            <a href="javascript:deleteTr( 996 );" class="btn btn-danger btn-xs">删除</a>
+        </td>
+    </tr>
+    {{/each}}
+    </script>
+
+
+    <!-- 设置分类下拉菜单选项模板 -->
+    <script type="text/html" id="category">
+        {{each data v}}
+            <option value="{{v.id}}">{{v.name}}</option>
+            {{/each}}}
+    </script>
+
+
+
+    <!-- 开始操作 -->
+    <script>
+        //  功能1、在页面中加载请求数据生成结构
+        $.ajax({
+            url: 'http://localhost:8000/admin/search',
+            data: {
+                type: $('#selCategory').val(),
+                state: $('#selStatus').val()
+            },
+            success: function (res) {
+                // console.log(res);
+                if (res.code === 200) {
+                    // 通过模板引擎生成页面结构
+                    var htmlStr = template('article', res);
+                    // 将字符串生成给对应标签
+                    $('#tbody').html(htmlStr);
+                }
+            }
+        });
+
+
+    </script>
 </body>
 
 </html>
