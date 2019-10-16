@@ -136,6 +136,8 @@
 
     <!-- 进行引入模板 -->
     <script src="./js/template-web.js"></script>
+    <script src="./tools/article.js"></script>
+    <script src="./tools/tool.js"></script>
 
     <!-- 设置分类结构模板 -->
     <script type="text/html" id="category">
@@ -189,9 +191,8 @@
     <!-- 模板引擎 -->
     <script>
         // ------- 一、信息的展示 -------
-        $.ajax({
-            url: 'http://localhost:8000/admin/category_search',
-            success: function (res) {
+        article.category_search({
+            callback: function (res) {
                 // console.log(res);
                 if (res.code === 200) {
                     // 通过模板引擎进行结构字符串拼接
@@ -202,6 +203,9 @@
                 }
             }
         });
+
+
+
 
 
         // ------- 二、信息的增加功能 -------
@@ -216,15 +220,14 @@
             }
 
             // 发送请求
-            $.ajax({
-                type: 'post',
-                url: 'http://localhost:8000/admin/category_add',
+            article.category_add({
                 data: {
                     name: name,
                     slug: slug
                 },
-                success: function (res) {
+                callback: function (res) {
                     // 判断请求返回
+                    // console.log(res);
                     if (res.code === 200) {
                         // 刷新页面
                         location.reload();
@@ -234,8 +237,9 @@
                     }
                 }
             });
+
+
         });
-    
 
 
 
@@ -284,8 +288,57 @@
                 alert('请完整填写表单！');
                 return;
             }
+            // 发送请求
+
+            article.category_edit({
+                data: {
+                    id: id,
+                    name: name,
+                    slug: slug
+                },
+                callback: function (res) {
+                    if (res.code === 200) {
+                        location.reload();
+                    } else {
+                        alert('name和slug不能重复，请检测后输入！');
+                    }
+                }
+            });
+
         });
 
+
+
+
+        // ------- 数据的删除功能 -------
+        // 进行删除按钮的点击事件，进行事件委托
+        $('#tbody').on('click', '.del', function () {
+            // 进行判断用户是否确定删除
+            if (!confirm('是否确定删除?')) {
+                return;
+            }
+            // 获取当前删除按钮所在的tr行
+            var $tr = $(this).parents('tr');
+
+            // 进行发送请求
+            var id = $(this).data('id');
+
+            article.category_delete({
+                data: {
+                    id: id
+                },
+                callback: function (res) {
+                    // console.log(res);
+                    if (res.code === 200) {
+                        // 1.可以进行页面的刷新
+                        // location.reload();
+                        // 2. 也可以直接删除当前tr行
+                        $tr.remove();
+                    }
+                }
+            });
+
+        });
 
 
     </script>
