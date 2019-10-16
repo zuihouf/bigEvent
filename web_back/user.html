@@ -137,18 +137,15 @@
 
 
             // 进行发送请求
-            $.ajax({
-                type: 'post',
-                url: EDIT_USERINFO,
+            user.edit_userinfo({
                 data: fd,
-                contentType: false,
-                processData: false,
-                success: function (res) {
+                callback: function (res) {
                     if (res.code === 200) {
                         // 如果修改成功，页面跳转到登录页面
                         parent.location.href = 'login.html';
                     }
                 }
+
             });
         });
 

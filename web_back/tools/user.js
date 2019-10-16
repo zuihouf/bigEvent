@@ -1,4 +1,6 @@
 // 在里面进行请求信息的设置
+// 用来存放用户信息管理
+
 
 var user = {
     // 登录请求
@@ -39,4 +41,16 @@ var user = {
             success: options.callback
         });
     },
+
+    // 编辑用户信息
+    edit_userinfo: function (options) {
+        $.ajax({
+            type: 'post',
+            url: EDIT_USERINFO,
+            data: options.data,
+            contentType: false,
+            processData: false,
+            success: options.callback
+        });
+    }
 };
